@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MaterialDesign进度条教程</string>
+    <string name="hello_world">一:正常 二:慢速 三:橙底\n此应用程序能否正常显示Material Design环形进度条（缓冲圆环）？</string>
+
+</resources>
