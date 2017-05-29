@@ -449,8 +449,8 @@ public class MaterialHorizontal extends ProgressBar
 		{
 			super.onDraw(canvas);
 			Log.e(TAG, e.toString());
-			final Context c=getContext().getApplicationContext();
-			Toast.makeText(c, "绘制进度条失败,请检查MEUI设置!", Toast.LENGTH_LONG).show();
+			//Note: We'd better not use getApplicationContext() in framework.
+			Toast.makeText(getContext(), "绘制进度条失败,请检查MEUI设置!", Toast.LENGTH_LONG).show();
 		}
 	}
 
