@@ -2,16 +2,13 @@ package meui.progress;
 
 import android.annotation.*;
 import android.content.*;
-import android.content.pm.*;
 import android.graphics.*;
 import android.graphics.Paint.*;
 import android.graphics.drawable.*;
-import android.net.*;
 import android.os.*;
 import android.provider.*;
 import android.util.*;
 import android.view.*;
-import android.database.*;
 import android.widget.*;
 
 /**
@@ -23,7 +20,7 @@ import android.widget.*;
  *         Licensed under the Apache License 2.0 license see:
  *         http://www.apache.org/licenses/LICENSE-2.0
  *
- * @Modifier @zhaozihanzzh
+ * @Modifier zhaozihanzzh
  * Made for MEUI.
  */
 public class MaterialHorizontal extends ProgressBar
@@ -43,7 +40,7 @@ public class MaterialHorizontal extends ProgressBar
 	private int circleRadius = 48;
 	private int barWidth = 4;
 	private int rimWidth = 4;
-	//  private boolean fillRadius = true;//原来false Disabled by ME Dream Coder
+	//private boolean fillRadius = true;//Original: false Disabled by ME Dream Coder
 	private double timeStartGrowing = 0;
 	private double barSpinCycleTime = 460;
 	private float barExtraLength = 0;
@@ -106,7 +103,7 @@ public class MaterialHorizontal extends ProgressBar
 
 		final int currentApiVersion = android.os.Build.VERSION.SDK_INT;
 
-		float animationValue;
+		final float animationValue;
 		if (currentApiVersion >= Build.VERSION_CODES.JELLY_BEAN_MR1)
 		{
 			animationValue = Settings.Global.getFloat(getContext().getContentResolver(),
@@ -137,8 +134,8 @@ public class MaterialHorizontal extends ProgressBar
 		final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 		final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-		int width;
-		int height;
+		final int width;
+		final int height;
 
 		//Measure Width
 		if (widthMode == MeasureSpec.EXACTLY)
@@ -246,6 +243,7 @@ public class MaterialHorizontal extends ProgressBar
 	 * Parse the attributes passed to the view from the XML
 	 *
 	 * @param a the attributes to parse
+	 * Disabled by zhaozihanzzh
 	 */
 	/* private void parseAttributes(TypedArray a) {
 	 // We transform the default values from DIP to pixels
@@ -281,10 +279,13 @@ public class MaterialHorizontal extends ProgressBar
 	 spin();
 	 }
 
-
 	 // Recycle
 	 a.recycle();
 	 }*/
+	/**
+	 * Initialize ProgressBar for MEUI
+	 * @author zhaozihanzzh
+	 */
 	private void prepare()
 	{
 		// We transform the default values from DIP to pixels
@@ -302,7 +303,7 @@ public class MaterialHorizontal extends ProgressBar
 		rimWidth = Settings.System.getInt(RESOLVER, "mdhp_rimWidth", rimWidth);
 		//(int) a.getDimension(R.styleable.ProgressWheel_matProg_rimWidth, rimWidth);
 
-		float baseSpinSpeed =Settings.System.getFloat(RESOLVER, "mdhp_baseSpinSpeed", spinSpeed / 360.0f);
+		final float baseSpinSpeed =Settings.System.getFloat(RESOLVER, "mdhp_baseSpinSpeed", spinSpeed / 360.0f);
 		//a.getFloat(R.styleable.ProgressWheel_matProg_spinSpeed, spinSpeed / 360.0f);
 		spinSpeed = baseSpinSpeed * 360;
 
@@ -321,8 +322,8 @@ public class MaterialHorizontal extends ProgressBar
 		linearProgress = getBooleans("mdhp_linear", false);
 		//a.getBoolean(R.styleable.ProgressWheel_matProg_linearProgress, false);
 
-		if (getBooleans("mdhp_quick", true))
-		/* R.styleable.ProgressWheel_matProg_progressIndeterminate, false) */{
+		if (getBooleans("mdhp_quick", true)) /* R.styleable.ProgressWheel_matProg_progressIndeterminate, false) */
+		{
 			spin();
 		}
 		//setupPaints();
@@ -336,13 +337,11 @@ public class MaterialHorizontal extends ProgressBar
 	 */
 	private boolean getBooleans(String name, Boolean defaultValue)
 	{
-		int temps=-1;
-		temps = Settings.System.getInt(RESOLVER, name, defaultValue ?1: 0);
-		Boolean result=(temps == 1 ?true: false);
+		final int temps = Settings.System.getInt(RESOLVER, name, defaultValue ?1: 0);
+		return temps == 1;
 
-		return result;
 	}
-	
+	/*
 	public void setCallback(ProgressCallback progressCallback)
 	{
 		callback = progressCallback;
@@ -351,7 +350,7 @@ public class MaterialHorizontal extends ProgressBar
 		{
 			runCallback();
 		}
-	}
+	}*/
 
 	//----------------------------------
 	//Animation stuff
@@ -392,20 +391,14 @@ public class MaterialHorizontal extends ProgressBar
 				}
 				lastTimeAnimated = SystemClock.uptimeMillis();
 
-				float from = mProgress - 90;
-				float length = barLength + barExtraLength;
-
-				if (isInEditMode())
-				{
-					from = 0;
-					length = 135;
-				}
+				final float from=isInEditMode()?0:(mProgress-90);
+				final float length=isInEditMode()?135:(barLength+barExtraLength);
 
 				canvas.drawArc(circleBounds, from, length, false, barPaint);
 			}
 			else
 			{
-				float oldProgress = mProgress;
+				final float oldProgress = mProgress;
 
 				if (mProgress != mTargetProgress)
 				{
@@ -481,9 +474,9 @@ public class MaterialHorizontal extends ProgressBar
 				barGrowingFromFront = !barGrowingFromFront;
 			}
 
-			float distance =
+			final float distance =
 				(float) Math.cos((timeStartGrowing / barSpinCycleTime + 1) * Math.PI) / 2 + 0.5f;
-			float destLength = (barMaxLength - barLength);
+			final float destLength = (barMaxLength - barLength);
 
 			if (barGrowingFromFront)
 			{
@@ -596,9 +589,9 @@ public class MaterialHorizontal extends ProgressBar
 	// Great way to save a view's state http://stackoverflow.com/a/7089687/1991053
 	@Override public Parcelable onSaveInstanceState()
 	{
-		Parcelable superState = super.onSaveInstanceState();
+		final Parcelable superState = super.onSaveInstanceState();
 
-		WheelSavedState ss = new WheelSavedState(superState);
+		final WheelSavedState ss = new WheelSavedState(superState);
 
 		// We save everything that can be changed at runtime
 		ss.mProgress = this.mProgress;
@@ -624,7 +617,7 @@ public class MaterialHorizontal extends ProgressBar
 			return;
 		}
 
-		WheelSavedState ss = (WheelSavedState) state;
+		final WheelSavedState ss = (WheelSavedState) state;
 		super.onRestoreInstanceState(ss.getSuperState());
 
 		this.mProgress = ss.mProgress;
