@@ -63,14 +63,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="能"
-			android:onClick="canButtonClicked"
+			android:id="@+id/can_work"
 			android:layout_gravity="center|center_horizontal"/>
 
 		<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="不能"
-			android:onClick="cannotButtonClicked"
+			android:id="@+id/cant_work"
 			android:layout_gravity="center|center_horizontal"/>
 
 	</LinearLayout>

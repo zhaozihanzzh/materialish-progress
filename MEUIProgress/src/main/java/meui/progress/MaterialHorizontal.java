@@ -27,7 +27,7 @@ public class MaterialHorizontal extends ProgressBar
 /*原来是view*/ 
 {
 	private static final String TAG =MaterialHorizontal.class.getSimpleName();
-	final ContentResolver RESOLVER=getContext().getContentResolver();
+    private final ContentResolver RESOLVER=getContext().getContentResolver();
 	private final int barLength = 16;
 	private final int barMaxLength = 270;
 	private final long pauseGrowingTime = 200;
@@ -210,11 +210,6 @@ public class MaterialHorizontal extends ProgressBar
 	 */
 	private void setupBounds(int layout_width, int layout_height)
 	{
-		final int paddingTop = getPaddingTop();
-		final int paddingBottom = getPaddingBottom();
-		final int paddingLeft = getPaddingLeft();
-		final int paddingRight = getPaddingRight();
-
 		/*if (!fillRadius)
 		// I modded fillRadius = true
 		{
@@ -234,8 +229,8 @@ public class MaterialHorizontal extends ProgressBar
 		}
 		else
 		{*/
-			circleBounds = new RectF(paddingLeft + barWidth, paddingTop + barWidth,
-									 layout_width - paddingRight - barWidth, layout_height - paddingBottom - barWidth);
+			circleBounds = new RectF(getPaddingLeft() + barWidth, getPaddingTop() + barWidth,
+									 layout_width - getPaddingRight() - barWidth, layout_height - getPaddingBottom() - barWidth);
 		//}
 	}
 
@@ -337,9 +332,7 @@ public class MaterialHorizontal extends ProgressBar
 	 */
 	private boolean getBooleans(String name, Boolean defaultValue)
 	{
-		final int temps = Settings.System.getInt(RESOLVER, name, defaultValue ?1: 0);
-		return temps == 1;
-
+		return Settings.System.getInt(RESOLVER, name, defaultValue ?1: 0) == 1;
 	}
 	/*
 	public void setCallback(ProgressCallback progressCallback)
@@ -451,10 +444,7 @@ public class MaterialHorizontal extends ProgressBar
 	{
 		super.onVisibilityChanged(changedView, visibility);
 
-		if (visibility == VISIBLE)
-		{
-			lastTimeAnimated = SystemClock.uptimeMillis();
-		}
+		if (visibility == VISIBLE) lastTimeAnimated = SystemClock.uptimeMillis();
 	}
 
 	private void updateBarLength(long deltaTimeInMilliSeconds)
@@ -537,10 +527,7 @@ public class MaterialHorizontal extends ProgressBar
 
 	private void runCallback(float value)
 	{
-		if (callback != null)
-		{
-			callback.onProgressUpdate(value);
-		}
+		if (callback != null) callback.onProgressUpdate(value);
 	}
 
 	private void runCallback()
