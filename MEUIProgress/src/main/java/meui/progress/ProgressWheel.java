@@ -75,7 +75,7 @@ public class ProgressWheel extends View/*原来是view*/ {
     super(context, attrs);
 
     parseAttributes(context.obtainStyledAttributes(attrs, R.styleable.ProgressWheel));
-	  
+      
     setAnimationEnabled();
   }
 
