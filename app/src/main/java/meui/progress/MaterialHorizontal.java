@@ -1,6 +1,5 @@
 package meui.progress;
 
-import android.annotation.*;
 import android.content.*;
 import android.graphics.*;
 import android.graphics.Paint.*;
@@ -24,10 +23,8 @@ import android.widget.*;
  * Made for MEUI.
  */
 
-public class MaterialHorizontal extends ProgressBar
-/*原来是view*/ 
-{
-    private static final String TAG =MaterialHorizontal.class.getSimpleName();
+public final class MaterialHorizontal extends ProgressBar {
+    /*原来是view*/ 
     private final ContentResolver RESOLVER=getContext().getContentResolver();
     private final int barLength = 16;
     private final int barMaxLength = 270;
@@ -78,8 +75,7 @@ public class MaterialHorizontal extends ProgressBar
     /**
      * The constructor for the ProgressWheel
      */
-    public MaterialHorizontal(Context context, AttributeSet attrs)
-    {
+    public MaterialHorizontal(Context context, AttributeSet attrs) {
         super(context, attrs);
         prepare();
     }
@@ -87,44 +83,41 @@ public class MaterialHorizontal extends ProgressBar
     /**
      * The constructor for the ProgressWheel
      */
-    public MaterialHorizontal(Context context)
-    {
+    public MaterialHorizontal(Context context) {
         super(context);
         prepare();
     }
-    public MaterialHorizontal(Context context, AttributeSet attrs, int defStyle)
-    {
+    public MaterialHorizontal(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         prepare();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void setAnimationEnabled()
-    {
+    /*@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+     private void setAnimationEnabled()
+     {
 
-        final int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+     final int currentApiVersion = android.os.Build.VERSION.SDK_INT;
 
-        final float animationValue;
-        if (currentApiVersion >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-        {
-            animationValue = Settings.Global.getFloat(getContext().getContentResolver(),
-                                                      Settings.Global.ANIMATOR_DURATION_SCALE, 1);
-        }
-        else
-        {
-            animationValue = Settings.System.getFloat(getContext().getContentResolver(),
-                                                      Settings.System.ANIMATOR_DURATION_SCALE, 1);
-        }
+     final float animationValue;
+     if (currentApiVersion >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+     {
+     animationValue = Settings.Global.getFloat(getContext().getContentResolver(),
+     Settings.Global.ANIMATOR_DURATION_SCALE, 1);
+     }
+     else
+     {
+     animationValue = Settings.System.getFloat(getContext().getContentResolver(),
+     Settings.System.ANIMATOR_DURATION_SCALE, 1);
+     }
 
-        shouldAnimate = animationValue != 0;
-    }
+     shouldAnimate = animationValue != 0;
+     }*/
 
     //----------------------------------
     //Setting up stuff
     //----------------------------------
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-    {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         final int viewWidth = circleRadius + this.getPaddingLeft() + this.getPaddingRight();
@@ -180,21 +173,15 @@ public class MaterialHorizontal extends ProgressBar
      * because this method is called after measuring the dimensions of MATCH_PARENT & WRAP_CONTENT.
      * Use this dimensions to setup the bounds and paints.
      */
-    @Override protected void onSizeChanged(int w, int h, int oldw, int oldh)
-    {
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        setupBounds(w, h);
-        setupPaints();
-        invalidate();
-    }
+        // Original: setupBounds(w, h);
+        circleBounds = new RectF(getPaddingLeft() + barWidth, getPaddingTop() + barWidth,
+                                 w - getPaddingRight() - barWidth, h - getPaddingBottom() - barWidth);
 
-    /**
-     * Set the properties of the paints we're using to
-     * draw the progress wheel
-     */
-    private void setupPaints()
-    {
+        //setupPaints();
         barPaint.setColor(barColor);
         barPaint.setAntiAlias(true);
         barPaint.setStyle(Style.STROKE);
@@ -204,36 +191,53 @@ public class MaterialHorizontal extends ProgressBar
         rimPaint.setAntiAlias(true);
         rimPaint.setStyle(Style.STROKE);
         rimPaint.setStrokeWidth(rimWidth);
+
+        invalidate();
     }
+
+    /**
+     * Set the properties of the paints we're using to
+     * draw the progress wheel
+     */
+    /*private void setupPaints() {
+     barPaint.setColor(barColor);
+     barPaint.setAntiAlias(true);
+     barPaint.setStyle(Style.STROKE);
+     barPaint.setStrokeWidth(barWidth);
+
+     rimPaint.setColor(rimColor);
+     rimPaint.setAntiAlias(true);
+     rimPaint.setStyle(Style.STROKE);
+     rimPaint.setStrokeWidth(rimWidth);
+     }*/
 
     /**
      * Set the bounds of the component
      */
-    private void setupBounds(int layout_width, int layout_height)
-    {
-        /*if (!fillRadius)
-        // I modded fillRadius = true
-        {
-            // Width should equal to Height, find the min value to setup the circle
-            final int minValue = Math.min(layout_width - paddingLeft - paddingRight,
-                                          layout_height - paddingBottom - paddingTop);
+    //private void setupBounds(int layout_width, int layout_height) {
+    /*if (!fillRadius)
+     // I modded fillRadius = true
+     {
+     // Width should equal to Height, find the min value to setup the circle
+     final int minValue = Math.min(layout_width - paddingLeft - paddingRight,
+     layout_height - paddingBottom - paddingTop);
 
-            final int circleDiameter = Math.min(minValue, circleRadius * 2 - barWidth * 2);
+     final int circleDiameter = Math.min(minValue, circleRadius * 2 - barWidth * 2);
 
-            // Calc the Offset if needed for centering the wheel in the available space
-            final int xOffset = (layout_width - paddingLeft - paddingRight - circleDiameter) / 2 + paddingLeft;
-            final int yOffset = (layout_height - paddingTop - paddingBottom - circleDiameter) / 2 + paddingTop;
+     // Calc the Offset if needed for centering the wheel in the available space
+     final int xOffset = (layout_width - paddingLeft - paddingRight - circleDiameter) / 2 + paddingLeft;
+     final int yOffset = (layout_height - paddingTop - paddingBottom - circleDiameter) / 2 + paddingTop;
 
-            circleBounds =
-                new RectF(xOffset + barWidth, yOffset + barWidth, xOffset + circleDiameter - barWidth,
-                          yOffset + circleDiameter - barWidth);
-        }
-        else
-        {*/
-            circleBounds = new RectF(getPaddingLeft() + barWidth, getPaddingTop() + barWidth,
-                                     layout_width - getPaddingRight() - barWidth, layout_height - getPaddingBottom() - barWidth);
-        //}
-    }
+     circleBounds =
+     new RectF(xOffset + barWidth, yOffset + barWidth, xOffset + circleDiameter - barWidth,
+     yOffset + circleDiameter - barWidth);
+     }
+     else
+     {*/
+    //  circleBounds = new RectF(getPaddingLeft() + barWidth, getPaddingTop() + barWidth,
+    //                           layout_width - getPaddingRight() - barWidth, layout_height - getPaddingBottom() - barWidth);
+    //}
+    //}
 
     /**
      * Parse the attributes passed to the view from the XML
@@ -282,14 +286,12 @@ public class MaterialHorizontal extends ProgressBar
      * Initialize ProgressBar for MEUI
      * @author zhaozihanzzh
      */
-    private void prepare()
-    {
+    private void prepare() {
         // We transform the default values from DIP to pixels
         final DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
         barWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, barWidth, metrics);
         rimWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rimWidth, metrics);
-        circleRadius =
-            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, circleRadius, metrics);
+        circleRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, circleRadius, metrics);
         circleRadius = Settings.System.getInt(RESOLVER, "mdhp_circleRadius", circleRadius);
         //(int) a.getDimension(R.styleable.ProgressWheel_matProg_circleRadius, circleRadius);
 
@@ -303,12 +305,11 @@ public class MaterialHorizontal extends ProgressBar
         //a.getFloat(R.styleable.ProgressWheel_matProg_spinSpeed, spinSpeed / 360.0f);
         spinSpeed = baseSpinSpeed * 360;
 
-        String sBarSpinCycleTime=Settings.System.getString(RESOLVER, "mdhp_cycleTime");
-        if (sBarSpinCycleTime == null || sBarSpinCycleTime == "")
+        final String sBarSpinCycleTime=Settings.System.getString(RESOLVER, "mdhp_cycleTime");
+        if (sBarSpinCycleTime != null)
         {
-            sBarSpinCycleTime = String.valueOf(barSpinCycleTime);
+            barSpinCycleTime = Double.parseDouble(sBarSpinCycleTime);
         }
-        barSpinCycleTime = Double.parseDouble(sBarSpinCycleTime);
         barColor = Settings.System.getInt(RESOLVER, "mdhp_barColor", 0xFF009688);
         //a.getColor(R.styleable.ProgressWheel_matProg_barColor, barColor);
 
@@ -318,138 +319,129 @@ public class MaterialHorizontal extends ProgressBar
         linearProgress = getBooleans("mdhp_linear", false);
         //a.getBoolean(R.styleable.ProgressWheel_matProg_linearProgress, false);
 
-        if (getBooleans("mdhp_quick", true)) /* R.styleable.ProgressWheel_matProg_progressIndeterminate, false) */
-        {
+        if (getBooleans("mdhp_quick", true))
+        /* R.styleable.ProgressWheel_matProg_progressIndeterminate, false) */ {
             spin();
         }
+
         //setupPaints();
         setDrawingCacheEnabled(getBooleans("mdhp_cache", false));
-        setAnimationEnabled();
+        //setAnimationEnabled();
+
+        shouldAnimate = Settings.System.getFloat(RESOLVER, 
+                                                 Settings.System.ANIMATOR_DURATION_SCALE, 1) != 0;
     }
-    
+
     /**
      * A method which helps to get boolean in settings (0=false,1=true)
      * @author zhaozihanzzh
      */
-    private boolean getBooleans(String name, Boolean defaultValue)
-    {
+    private boolean getBooleans(String name, Boolean defaultValue) {
         return Settings.System.getInt(RESOLVER, name, defaultValue ?1: 0) == 1;
     }
     /*
-    public void setCallback(ProgressCallback progressCallback)
-    {
-        callback = progressCallback;
+     public void setCallback(ProgressCallback progressCallback)
+     {
+     callback = progressCallback;
 
-        if (!isSpinning)
-        {
-            runCallback();
-        }
-    }*/
+     if (!isSpinning)
+     {
+     runCallback();
+     }
+     }*/
 
     //----------------------------------
     //Animation stuff
     //----------------------------------
     @Override
-    protected void onDraw(Canvas canvas)
-    {
-        try
+    protected void onDraw(Canvas canvas) {
+        
+        canvas.drawArc(circleBounds, 360, 360, false, rimPaint);
+
+        boolean mustInvalidate = false;
+
+        if (!shouldAnimate)
         {
-            canvas.drawArc(circleBounds, 360, 360, false, rimPaint);
+            return;
+        }
 
-            boolean mustInvalidate = false;
+        if (isSpinning)
+        {
+            //Draw the spinning bar
+            mustInvalidate = true;
 
-            if (!shouldAnimate)
+            final long deltaTime = (SystemClock.uptimeMillis() - lastTimeAnimated);
+            final float deltaNormalized = deltaTime * spinSpeed / 1000.0f;
+
+            updateBarLength(deltaTime);
+
+            mProgress += deltaNormalized;
+            if (mProgress > 360)
             {
-                return;
+                mProgress -= 360f;
+
+                // A full turn has been completed
+                // we run the callback with -1 in case we want to
+                // do something, like changing the color
+                runCallback(-1.0f);
             }
+            lastTimeAnimated = SystemClock.uptimeMillis();
 
-            if (isSpinning)
+            final float from=isInEditMode() ?0: (mProgress - 90);
+            final float length=isInEditMode() ?135: (barLength + barExtraLength);
+
+            canvas.drawArc(circleBounds, from, length, false, barPaint);
+        }
+        else {
+            final float oldProgress = mProgress;
+
+            if (mProgress != mTargetProgress)
             {
-                //Draw the spinning bar
+                //We smoothly increase the progress bar
                 mustInvalidate = true;
 
-                final long deltaTime = (SystemClock.uptimeMillis() - lastTimeAnimated);
-                final float deltaNormalized = deltaTime * spinSpeed / 1000.0f;
+                final float deltaTime = (float) (SystemClock.uptimeMillis() - lastTimeAnimated) / 1000;
+                final float deltaNormalized = deltaTime * spinSpeed;
 
-                updateBarLength(deltaTime);
-
-                mProgress += deltaNormalized;
-                if (mProgress > 360)
-                {
-                    mProgress -= 360f;
-
-                    // A full turn has been completed
-                    // we run the callback with -1 in case we want to
-                    // do something, like changing the color
-                    runCallback(-1.0f);
-                }
+                mProgress = Math.min(mProgress + deltaNormalized, mTargetProgress);
                 lastTimeAnimated = SystemClock.uptimeMillis();
-
-                final float from=isInEditMode()?0:(mProgress-90);
-                final float length=isInEditMode()?135:(barLength+barExtraLength);
-
-                canvas.drawArc(circleBounds, from, length, false, barPaint);
             }
-            else
+
+            if (oldProgress != mProgress)
             {
-                final float oldProgress = mProgress;
-
-                if (mProgress != mTargetProgress)
-                {
-                    //We smoothly increase the progress bar
-                    mustInvalidate = true;
-
-                    final float deltaTime = (float) (SystemClock.uptimeMillis() - lastTimeAnimated) / 1000;
-                    final float deltaNormalized = deltaTime * spinSpeed;
-
-                    mProgress = Math.min(mProgress + deltaNormalized, mTargetProgress);
-                    lastTimeAnimated = SystemClock.uptimeMillis();
-                }
-
-                if (oldProgress != mProgress)
-                {
-                    runCallback();
-                }
-
-                float offset = 0.0f;
-                float progress = mProgress;
-                if (!linearProgress)
-                {
-                    final float factor = 2.0f;
-                    offset = (float) (1.0f - Math.pow(1.0f - mProgress / 360.0f, 2.0f * factor)) * 360.0f;
-                    progress = (float) (1.0f - Math.pow(1.0f - mProgress / 360.0f, factor)) * 360.0f;
-                }
-
-                if (isInEditMode())
-                {
-                    progress = 360;
-                }
-                canvas.drawArc(circleBounds, offset - 90, progress, false, barPaint);
+                runCallback();
             }
 
-            if (mustInvalidate)
+            float offset = 0.0f;
+            float progress = mProgress;
+            if (!linearProgress)
             {
-                invalidate();
+                final float factor = 2.0f;
+                offset = (float) (1.0f - Math.pow(1.0f - mProgress / 360.0f, 2.0f * factor)) * 360.0f;
+                progress = (float) (1.0f - Math.pow(1.0f - mProgress / 360.0f, factor)) * 360.0f;
             }
+
+            if (isInEditMode())
+            {
+                progress = 360;
+            }
+            canvas.drawArc(circleBounds, offset - 90, progress, false, barPaint);
         }
-        catch (Exception e)
+
+        if (mustInvalidate)
         {
-            super.onDraw(canvas);
-            Log.e(TAG, e.toString());
-            //Note: We'd better not use getApplicationContext() in framework.
-            Toast.makeText(getContext(), "绘制进度条失败,请检查MEUI设置!", Toast.LENGTH_LONG).show();
+            invalidate();
         }
     }
 
-    @Override protected void onVisibilityChanged(View changedView, int visibility)
-    {
+    @Override
+    protected void onVisibilityChanged(View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
 
         if (visibility == VISIBLE) lastTimeAnimated = SystemClock.uptimeMillis();
     }
 
-    private void updateBarLength(long deltaTimeInMilliSeconds)
-    {
+    private void updateBarLength(long deltaTimeInMilliSeconds) {
         if (pausedTimeWithoutGrowing >= pauseGrowingTime)
         {
             timeStartGrowing += deltaTimeInMilliSeconds;
@@ -491,48 +483,47 @@ public class MaterialHorizontal extends ProgressBar
      */
 
     /*public boolean isSpinning()
-    {
-        return isSpinning;
-    }*/
+     {
+     return isSpinning;
+     }*/
 
     /**
      * Reset the count (in increment mode)
      */
     /*public void resetCount()
-    {
-        mProgress = 0.0f;
-        mTargetProgress = 0.0f;
-        invalidate();
-    }*/
+     {
+     mProgress = 0.0f;
+     mTargetProgress = 0.0f;
+     invalidate();
+     }*/
 
     /**
      * Turn off spin mode
      */
     /*public void stopSpinning()
-    {
-        isSpinning = false;
-        mProgress = 0.0f;
-        mTargetProgress = 0.0f;
-        invalidate();
-    }*/
+     {
+     isSpinning = false;
+     mProgress = 0.0f;
+     mTargetProgress = 0.0f;
+     invalidate();
+     }*/
 
     /**
      * Puts the view on spin mode
      */
-    public void spin()
-    {
+    public void spin() {
         lastTimeAnimated = SystemClock.uptimeMillis();
         isSpinning = true;
         invalidate();
     }
 
-    private void runCallback(float value)
-    {
-        if (callback != null) callback.onProgressUpdate(value);
+    private void runCallback(float value) {
+        if (callback != null) {
+            callback.onProgressUpdate(value);
+        }
     }
 
-    private void runCallback()
-    {
+    private void runCallback() {
         if (callback != null)
         {
             final float normalizedProgress = (float) Math.round(mProgress * 100 / 360.0f) / 100;
@@ -547,36 +538,36 @@ public class MaterialHorizontal extends ProgressBar
      * @param progress the progress between 0 and 1
      */
     /*public void setInstantProgress(float progress)
-    {
-        if (isSpinning)
-        {
-            mProgress = 0.0f;
-            isSpinning = false;
-        }
+     {
+     if (isSpinning)
+     {
+     mProgress = 0.0f;
+     isSpinning = false;
+     }
 
-        if (progress > 1.0f)
-        {
-            progress -= 1.0f;
-        }
-        else if (progress < 0)
-        {
-            progress = 0;
-        }
+     if (progress > 1.0f)
+     {
+     progress -= 1.0f;
+     }
+     else if (progress < 0)
+     {
+     progress = 0;
+     }
 
-        if (progress == mTargetProgress)
-        {
-            return;
-        }
+     if (progress == mTargetProgress)
+     {
+     return;
+     }
 
-        mTargetProgress = Math.min(progress * 360.0f, 360.0f);
-        mProgress = mTargetProgress;
-        lastTimeAnimated = SystemClock.uptimeMillis();
-        invalidate();
-    }*/
+     mTargetProgress = Math.min(progress * 360.0f, 360.0f);
+     mProgress = mTargetProgress;
+     lastTimeAnimated = SystemClock.uptimeMillis();
+     invalidate();
+     }*/
 
     // Great way to save a view's state http://stackoverflow.com/a/7089687/1991053
-    @Override public Parcelable onSaveInstanceState()
-    {
+    @Override
+    public Parcelable onSaveInstanceState() {
         final Parcelable superState = super.onSaveInstanceState();
 
         final WheelSavedState ss = new WheelSavedState(superState);
@@ -597,8 +588,8 @@ public class MaterialHorizontal extends ProgressBar
         return ss;
     }
 
-    @Override public void onRestoreInstanceState(Parcelable state)
-    {
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
         if (!(state instanceof WheelSavedState))
         {
             super.onRestoreInstanceState(state);
@@ -620,10 +611,10 @@ public class MaterialHorizontal extends ProgressBar
         this.linearProgress = ss.linearProgress;
         //this.fillRadius = ss.fillRadius;
         this.lastTimeAnimated = SystemClock.uptimeMillis();
-    }// MEUI ADD BELOW
+    }
+    // MEUI ADD BELOW
     @Override
-    public boolean verifyDrawable(Drawable who)
-    {
+    public boolean verifyDrawable(Drawable who) {
         return isSpinning;
     }
 
@@ -639,8 +630,7 @@ public class MaterialHorizontal extends ProgressBar
      */
 
     @Override
-    public int getProgress()
-    {
+    public int getProgress() {
         return isSpinning ? -1 : (int)mProgress / 360;
     }
 //原来是float，没有(int)这个cast
@@ -655,41 +645,41 @@ public class MaterialHorizontal extends ProgressBar
      * @param progress the progress between 0 and 1
      */
     /*public void setProgress(float progress)
-    {
-        if (isSpinning)
-        {
-            mProgress = 0.0f;
-            isSpinning = false;
+     {
+     if (isSpinning)
+     {
+     mProgress = 0.0f;
+     isSpinning = false;
 
-            runCallback();
-        }
+     runCallback();
+     }
 
-        if (progress > 1.0f)
-        {
-            progress -= 1.0f;
-        }
-        else if (progress < 0)
-        {
-            progress = 0;
-        }
+     if (progress > 1.0f)
+     {
+     progress -= 1.0f;
+     }
+     else if (progress < 0)
+     {
+     progress = 0;
+     }
 
-        if (progress == mTargetProgress)
-        {
-            return;
-        }
+     if (progress == mTargetProgress)
+     {
+     return;
+     }
 
-        // If we are currently in the right position
-        // we set again the last time animated so the
-        // animation starts smooth from here
-        if (mProgress == mTargetProgress)
-        {
-            lastTimeAnimated = SystemClock.uptimeMillis();
-        }
+     // If we are currently in the right position
+     // we set again the last time animated so the
+     // animation starts smooth from here
+     if (mProgress == mTargetProgress)
+     {
+     lastTimeAnimated = SystemClock.uptimeMillis();
+     }
 
-        mTargetProgress = Math.min(progress * 360.0f, 360.0f);
+     mTargetProgress = Math.min(progress * 360.0f, 360.0f);
 
-        invalidate();
-    }*/
+     invalidate();
+     }*/
 
     /**
      * Sets the determinate progress mode
@@ -697,21 +687,21 @@ public class MaterialHorizontal extends ProgressBar
      * @param isLinear if the progress should increase linearly
      */
     /*public void setLinearProgress(boolean isLinear)
-    {
-        linearProgress = isLinear;
-        if (!isSpinning)
-        {
-            invalidate();
-        }
-    }*/
+     {
+     linearProgress = isLinear;
+     if (!isSpinning)
+     {
+     invalidate();
+     }
+     }*/
 
     /**
      * @return the radius of the wheel in pixels
      */
     /*public int getCircleRadius()
-    {
-        return circleRadius;
-    }*/
+     {
+     return circleRadius;
+     }*/
 
     /**
      * Sets the radius of the wheel
@@ -719,21 +709,21 @@ public class MaterialHorizontal extends ProgressBar
      * @param circleRadius the expected radius, in pixels
      */
     /*public void setCircleRadius(int circleRadius)
-    {
-        this.circleRadius = circleRadius;
-        if (!isSpinning)
-        {
-            invalidate();
-        }
-    }*/
+     {
+     this.circleRadius = circleRadius;
+     if (!isSpinning)
+     {
+     invalidate();
+     }
+     }*/
 
     /**
      * @return the width of the spinning bar
      */
     /*public int getBarWidth()
-    {
-        return barWidth;
-    }*/
+     {
+     return barWidth;
+     }*/
 
     /**
      * Sets the width of the spinning bar
@@ -741,21 +731,21 @@ public class MaterialHorizontal extends ProgressBar
      * @param barWidth the spinning bar width in pixels
      */
     /*public void setBarWidth(int barWidth)
-    {
-        this.barWidth = barWidth;
-        if (!isSpinning)
-        {
-            invalidate();
-        }
-    }*/
+     {
+     this.barWidth = barWidth;
+     if (!isSpinning)
+     {
+     invalidate();
+     }
+     }*/
 
     /**
      * @return the color of the spinning bar
      */
     /*public int getBarColor()
-    {
-        return barColor;
-    }*/
+     {
+     return barColor;
+     }*/
 
     /**
      * Sets the color of the spinning bar
@@ -763,22 +753,22 @@ public class MaterialHorizontal extends ProgressBar
      * @param barColor The spinning bar color
      */
     /*public void setBarColor(int barColor)
-    {
-        this.barColor = barColor;
-        setupPaints();
-        if (!isSpinning)
-        {
-            invalidate();
-        }
-    }*/
+     {
+     this.barColor = barColor;
+     setupPaints();
+     if (!isSpinning)
+     {
+     invalidate();
+     }
+     }*/
 
     /**
      * @return the color of the wheel's contour
      */
     /*public int getRimColor()
-    {
-        return rimColor;
-    }*/
+     {
+     return rimColor;
+     }*/
 
     /**
      * Sets the color of the wheel's contour
@@ -786,14 +776,14 @@ public class MaterialHorizontal extends ProgressBar
      * @param rimColor the color for the wheel
      */
     /*public void setRimColor(int rimColor)
-    {
-        this.rimColor = rimColor;
-        setupPaints();
-        if (!isSpinning)
-        {
-            invalidate();
-        }
-    }*/
+     {
+     this.rimColor = rimColor;
+     setupPaints();
+     if (!isSpinning)
+     {
+     invalidate();
+     }
+     }*/
 
     /**
      * @return the base spinning speed, in full circle turns per second
@@ -801,9 +791,9 @@ public class MaterialHorizontal extends ProgressBar
      * the smoothness when setting a progress
      */
     /*public float getSpinSpeed()
-    {
-        return spinSpeed / 360.0f;
-    }*/
+     {
+     return spinSpeed / 360.0f;
+     }*/
 
     /**
      * Sets the base spinning speed, in full circle turns per second
@@ -813,17 +803,17 @@ public class MaterialHorizontal extends ProgressBar
      * @param spinSpeed the desired base speed in full turns per second
      */
     /*public void setSpinSpeed(float spinSpeed)
-    {
-        this.spinSpeed = spinSpeed * 360.0f;
-    }*/
+     {
+     this.spinSpeed = spinSpeed * 360.0f;
+     }*/
 
     /**
      * @return the width of the wheel's contour in pixels
      */
     /*public int getRimWidth()
-    {
-        return rimWidth;
-    }*/
+     {
+     return rimWidth;
+     }*/
 
     /**
      * Sets the width of the wheel's contour
@@ -831,14 +821,14 @@ public class MaterialHorizontal extends ProgressBar
      * @param rimWidth the width in pixels
      */
     /*public void setRimWidth(int rimWidth)
-    {
-        this.rimWidth = rimWidth;
-        if (!isSpinning)
-        {
-            invalidate();
-        }
+     {
+     this.rimWidth = rimWidth;
+     if (!isSpinning)
+     {
+     invalidate();
+     }
 
-    }*/
+     }*/
 
     public interface ProgressCallback
     {
@@ -860,13 +850,11 @@ public class MaterialHorizontal extends ProgressBar
         //required field that makes Parcelables from a Parcel
         public static final Parcelable.Creator<WheelSavedState> CREATOR =
         new Parcelable.Creator<WheelSavedState>() {
-            public WheelSavedState createFromParcel(Parcel in)
-            {
+            public WheelSavedState createFromParcel(Parcel in) {
                 return new WheelSavedState(in);
             }
 
-            public WheelSavedState[] newArray(int size)
-            {
+            public WheelSavedState[] newArray(int size) {
                 return new WheelSavedState[size];
             }
         };
@@ -882,13 +870,11 @@ public class MaterialHorizontal extends ProgressBar
         boolean linearProgress;
         //boolean fillRadius;
 
-        WheelSavedState(Parcelable superState)
-        {
+        WheelSavedState(Parcelable superState) {
             super(superState);
         }
 
-        private WheelSavedState(Parcel in)
-        {
+        private WheelSavedState(Parcel in) {
             super(in);
             this.mProgress = in.readFloat();
             this.mTargetProgress = in.readFloat();
@@ -903,8 +889,8 @@ public class MaterialHorizontal extends ProgressBar
             //this.fillRadius = in.readByte() != 0;
         }
 
-        @Override public void writeToParcel(Parcel out, int flags)
-        {
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeFloat(this.mProgress);
             out.writeFloat(this.mTargetProgress);
