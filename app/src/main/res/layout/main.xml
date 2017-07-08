@@ -1,108 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:wheel="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:paddingLeft="3dp"
-    android:paddingRight="3dp"
-    android:backgroundTint="#FF009688">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:wheel="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:gravity="top|center_vertical"
+	android:orientation="vertical"
+	android:paddingLeft="3dp"
+	android:paddingRight="3dp"
+	android:backgroundTint="#FF009688"
+	android:fitsSystemWindows="true">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:text="App＆教程:zhaozihanzzh"
-        android:gravity="center_horizontal"
-        android:textColor="#FF009688"
-        android:id="@+id/author"/>
+	<TextView
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="match_parent"
+		android:text="App＆教程:zhaozihanzzh"
+		android:gravity="center_horizontal"
+		android:textColor="#FF009688"
+		android:id="@+id/author"
+		android:paddingTop="8dp"/>
 
-    <meui.progress.ProgressWheel
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center|center_horizontal"
-        wheel:matProg_barColor="#ff009688"
-        wheel:matProg_progressIndeterminate="true"/>
+	<meui.progress.ProgressWheel
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_gravity="center|center_horizontal"
+		wheel:matProg_barColor="#ff009688"
+		wheel:matProg_progressIndeterminate="true"/>
 
-    <meui.progress.ProgressWheel
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center|center_horizontal"
-        wheel:matProg_barColor="#ff2196F3"
-        wheel:matProg_progressIndeterminate="true"
-        wheel:matProg_spinSpeed="0.5"/>
+	<meui.progress.ProgressWheel
+		android:layout_width="32dp"
+		android:layout_height="32dp"
+		android:layout_gravity="center|center_horizontal"
+		wheel:matProg_barColor="#ff2196F3"
+		wheel:matProg_progressIndeterminate="true"
+		wheel:matProg_spinSpeed="0.5"/>
 
-    <meui.progress.ProgressWheel
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center|center_horizontal"
-        wheel:matProg_barColor="#ff2196F3"
-        wheel:matProg_progressIndeterminate="true"
-        wheel:matProg_rimWidth="5dp"
-        wheel:matProg_circleRadius="25dp"
-        wheel:matProg_rimColor="#ffff9800"
-        wheel:matProg_fillRadius="false"
-        wheel:matProg_barSpinCycleTime="500"/>
+	<meui.progress.ProgressWheel
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_gravity="center|center_horizontal"
+		wheel:matProg_barColor="#ff2196F3"
+		wheel:matProg_progressIndeterminate="true"
+		wheel:matProg_rimWidth="5dp"
+		wheel:matProg_circleRadius="25dp"
+		wheel:matProg_rimColor="#ffff9800"
+		wheel:matProg_fillRadius="false"
+		wheel:matProg_barSpinCycleTime="500"/>
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="3dp"/>
+	<TextView
+		android:text="@string/hello_world"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginLeft="3dp"/>
 
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal"
+		android:gravity="center_horizontal">
+
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="能"
+			android:id="@+id/can_work"
+			android:layout_gravity="center|center_horizontal"/>
+
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="不能"
+			android:id="@+id/cant_work"
+			android:layout_gravity="center|center_horizontal"/>
+
+	</LinearLayout>
+
+	<meui.progress.MaterialHorizontal
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center_horizontal"/>
+
+	<meui.progress.MaterialHorizontal
+		android:layout_height="15dp"
+		android:layout_width="15dp"
+		android:layout_gravity="center_horizontal"/>
+
+	<meui.progress.MaterialHorizontal
+		android:layout_height="40dp"
+		android:layout_width="40dp"
+		android:layout_gravity="center_horizontal"/>
+
+	<TextView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="以上区域中是MEUI自定义设置所控制的进度条。"
+		android:gravity="center_horizontal"/>
+
+	<Button
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:text="来自pnikosis的GitHub项目:materialish-progress"
+		android:id="@+id/goToGitHub"
+		android:gravity="center_horizontal"
+		android:textColor="#FF009688"
+		android:textAllCaps="false"/>
     <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_width="fill_parent"
         android:orientation="horizontal"
-        android:gravity="center_horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="能"
-            android:id="@+id/can_work"
-            android:layout_gravity="center|center_horizontal"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="不能"
-            android:id="@+id/cant_work"
-            android:layout_gravity="center|center_horizontal"/>
-
+        android:gravity="center"
+        android:id="@+id/meui_github"
+        android:clickable="true">
+	<ImageView
+		android:layout_height="32dp"
+		android:layout_width="32dp"
+        android:gravity="left|center_horizontal"
+		android:src="@drawable/ic_github"/>
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="MEUI Progress Bar"/>
     </LinearLayout>
 
-    <meui.progress.MaterialHorizontal
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal"/>
-    
-
-    <meui.progress.MaterialHorizontal
-        android:layout_height="15dp"
-        android:layout_width="15dp"
-        android:layout_gravity="center_horizontal"/>
-    <meui.progress.MaterialHorizontal
-        android:layout_height="40dp"
-        android:layout_width="40dp"
-        android:layout_gravity="center_horizontal"/>
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="以上区域中是MEUI自定义设置所控制的进度条。"
-        android:gravity="center_horizontal"/>
-    <Button
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="来自pnikosis的GitHub项目:materialish-progress"
-        android:id="@+id/goToGitHub"
-        android:gravity="center_horizontal"
-        android:textColor="#FF009688"
-        android:textAllCaps="false"/>
-    
 </LinearLayout>
 

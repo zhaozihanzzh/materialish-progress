@@ -45,7 +45,7 @@ public final class MaterialHorizontal extends ProgressBar {
     private boolean barGrowingFromFront = true;
     private long pausedTimeWithoutGrowing = 0;
     //Colors (with defaults)
-    private int barColor = 0xAA000000;
+    private int barColor = 0xFF009688;
     private int rimColor = 0x00FFFFFF;
 
     //Paints
@@ -132,35 +132,25 @@ public final class MaterialHorizontal extends ProgressBar {
         final int height;
 
         //Measure Width
-        if (widthMode == MeasureSpec.EXACTLY)
-        {
+        if (widthMode == MeasureSpec.EXACTLY) {
             //Must be this size
             width = widthSize;
-        }
-        else if (widthMode == MeasureSpec.AT_MOST)
-        {
+        } else if (widthMode == MeasureSpec.AT_MOST) {
             //Can't be bigger than...
             width = Math.min(viewWidth, widthSize);
-        }
-        else
-        {
+        } else {
             //Be whatever you want
             width = viewWidth;
         }
 
         //Measure Height
-        if (heightMode == MeasureSpec.EXACTLY || widthMode == MeasureSpec.EXACTLY)
-        {
+        if (heightMode == MeasureSpec.EXACTLY || widthMode == MeasureSpec.EXACTLY) {
             //Must be this size
             height = heightSize;
-        }
-        else if (heightMode == MeasureSpec.AT_MOST)
-        {
+        } else if (heightMode == MeasureSpec.AT_MOST) {
             //Can't be bigger than...
             height = Math.min(viewHeight, heightSize);
-        }
-        else
-        {
+        } else {
             //Be whatever you want
             height = viewHeight;
         }
@@ -306,11 +296,10 @@ public final class MaterialHorizontal extends ProgressBar {
         spinSpeed = baseSpinSpeed * 360;
 
         final String sBarSpinCycleTime=Settings.System.getString(RESOLVER, "mdhp_cycleTime");
-        if (sBarSpinCycleTime != null)
-        {
+        if (sBarSpinCycleTime != null) {
             barSpinCycleTime = Double.parseDouble(sBarSpinCycleTime);
         }
-        barColor = Settings.System.getInt(RESOLVER, "mdhp_barColor", 0xFF009688);
+        barColor = Settings.System.getInt(RESOLVER, "mdhp_barColor", barColor);
         //a.getColor(R.styleable.ProgressWheel_matProg_barColor, barColor);
 
         rimColor = Settings.System.getInt(RESOLVER, "mdhp_rimColor", rimColor);
@@ -319,8 +308,7 @@ public final class MaterialHorizontal extends ProgressBar {
         linearProgress = getBooleans("mdhp_linear", false);
         //a.getBoolean(R.styleable.ProgressWheel_matProg_linearProgress, false);
 
-        if (getBooleans("mdhp_quick", true))
-        /* R.styleable.ProgressWheel_matProg_progressIndeterminate, false) */ {
+        if (getBooleans("mdhp_quick", true)) {
             spin();
         }
 
@@ -355,18 +343,16 @@ public final class MaterialHorizontal extends ProgressBar {
     //----------------------------------
     @Override
     protected void onDraw(Canvas canvas) {
-        
+
         canvas.drawArc(circleBounds, 360, 360, false, rimPaint);
 
         boolean mustInvalidate = false;
 
-        if (!shouldAnimate)
-        {
+        if (!shouldAnimate) {
             return;
         }
 
-        if (isSpinning)
-        {
+        if (isSpinning) {
             //Draw the spinning bar
             mustInvalidate = true;
 
@@ -376,8 +362,7 @@ public final class MaterialHorizontal extends ProgressBar {
             updateBarLength(deltaTime);
 
             mProgress += deltaNormalized;
-            if (mProgress > 360)
-            {
+            if (mProgress > 360) {
                 mProgress -= 360f;
 
                 // A full turn has been completed
@@ -391,12 +376,10 @@ public final class MaterialHorizontal extends ProgressBar {
             final float length=isInEditMode() ?135: (barLength + barExtraLength);
 
             canvas.drawArc(circleBounds, from, length, false, barPaint);
-        }
-        else {
+        } else {
             final float oldProgress = mProgress;
 
-            if (mProgress != mTargetProgress)
-            {
+            if (mProgress != mTargetProgress) {
                 //We smoothly increase the progress bar
                 mustInvalidate = true;
 
@@ -407,29 +390,25 @@ public final class MaterialHorizontal extends ProgressBar {
                 lastTimeAnimated = SystemClock.uptimeMillis();
             }
 
-            if (oldProgress != mProgress)
-            {
+            if (oldProgress != mProgress) {
                 runCallback();
             }
 
             float offset = 0.0f;
             float progress = mProgress;
-            if (!linearProgress)
-            {
+            if (!linearProgress) {
                 final float factor = 2.0f;
                 offset = (float) (1.0f - Math.pow(1.0f - mProgress / 360.0f, 2.0f * factor)) * 360.0f;
                 progress = (float) (1.0f - Math.pow(1.0f - mProgress / 360.0f, factor)) * 360.0f;
             }
 
-            if (isInEditMode())
-            {
+            if (isInEditMode()) {
                 progress = 360;
             }
             canvas.drawArc(circleBounds, offset - 90, progress, false, barPaint);
         }
 
-        if (mustInvalidate)
-        {
+        if (mustInvalidate) {
             invalidate();
         }
     }
@@ -442,12 +421,10 @@ public final class MaterialHorizontal extends ProgressBar {
     }
 
     private void updateBarLength(long deltaTimeInMilliSeconds) {
-        if (pausedTimeWithoutGrowing >= pauseGrowingTime)
-        {
+        if (pausedTimeWithoutGrowing >= pauseGrowingTime) {
             timeStartGrowing += deltaTimeInMilliSeconds;
 
-            if (timeStartGrowing > barSpinCycleTime)
-            {
+            if (timeStartGrowing > barSpinCycleTime) {
                 // We completed a size change cycle
                 // (growing or shrinking)
                 timeStartGrowing -= barSpinCycleTime;
@@ -461,19 +438,14 @@ public final class MaterialHorizontal extends ProgressBar {
                 (float) Math.cos((timeStartGrowing / barSpinCycleTime + 1) * Math.PI) / 2 + 0.5f;
             final float destLength = (barMaxLength - barLength);
 
-            if (barGrowingFromFront)
-            {
+            if (barGrowingFromFront) {
                 barExtraLength = distance * destLength;
-            }
-            else
-            {
+            } else {
                 final float newLength = destLength * (1 - distance);
                 mProgress += (barExtraLength - newLength);
                 barExtraLength = newLength;
             }
-        }
-        else
-        {
+        } else {
             pausedTimeWithoutGrowing += deltaTimeInMilliSeconds;
         }
     }
@@ -524,8 +496,7 @@ public final class MaterialHorizontal extends ProgressBar {
     }
 
     private void runCallback() {
-        if (callback != null)
-        {
+        if (callback != null) {
             final float normalizedProgress = (float) Math.round(mProgress * 100 / 360.0f) / 100;
             callback.onProgressUpdate(normalizedProgress);
         }
@@ -590,8 +561,7 @@ public final class MaterialHorizontal extends ProgressBar {
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof WheelSavedState))
-        {
+        if (!(state instanceof WheelSavedState)) {
             super.onRestoreInstanceState(state);
             return;
         }
@@ -830,8 +800,7 @@ public final class MaterialHorizontal extends ProgressBar {
 
      }*/
 
-    public interface ProgressCallback
-    {
+    public interface ProgressCallback {
         /**
          * Method to call when the progress reaches a value
          * in order to avoid float precision issues, the progress
@@ -845,8 +814,7 @@ public final class MaterialHorizontal extends ProgressBar {
         public void onProgressUpdate(float progress);
     }
 
-    static class WheelSavedState extends BaseSavedState
-    {
+    static class WheelSavedState extends BaseSavedState {
         //required field that makes Parcelables from a Parcel
         public static final Parcelable.Creator<WheelSavedState> CREATOR =
         new Parcelable.Creator<WheelSavedState>() {
